@@ -1,0 +1,599 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user account and active role configuration with isolated PII.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full display name of the user",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the user",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "description": "Assigned role in the workspace",
+          "enum": ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"],
+          "minLength": 5,
+          "maxLength": 20
+        },
+        "department": {
+          "type": "string",
+          "description": "Department or engineering unit",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "passwordHashPreview": {
+          "type": "string",
+          "description": "BCrypt/PBKDF2 hash identifier for credential audit",
+          "minLength": 8,
+          "maxLength": 100
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["uid", "name", "email", "role", "department", "passwordHashPreview", "createdAt", "updatedAt"]
+    },
+    "ManagedUser": {
+      "title": "ManagedUser",
+      "description": "Workspace user account record managed by Administrators and assigned to projects.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the managed user account",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID who manages this record",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the user",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Corporate email address",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "description": "System role assigned to the user",
+          "enum": ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"],
+          "minLength": 5,
+          "maxLength": 20
+        },
+        "department": {
+          "type": "string",
+          "description": "Organizational department",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "status": {
+          "type": "string",
+          "description": "Account status",
+          "enum": ["ACTIVE", "SUSPENDED", "ARCHIVED"],
+          "minLength": 6,
+          "maxLength": 16
+        },
+        "avatarKey": {
+          "type": "string",
+          "description": "Avatar identifier key",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "name", "email", "role", "department", "status", "avatarKey", "createdAt", "updatedAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Enterprise project with timeline, assigned manager, and status tracking.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique project ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Project title",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed project scope and objectives",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "startDate": {
+          "type": "string",
+          "description": "ISO start date YYYY-MM-DD",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "endDate": {
+          "type": "string",
+          "description": "ISO target completion date YYYY-MM-DD",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "status": {
+          "type": "string",
+          "description": "Lifecycle status of the project",
+          "enum": ["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED", "ARCHIVED"],
+          "minLength": 6,
+          "maxLength": 16
+        },
+        "managerId": {
+          "type": "string",
+          "description": "ID of the assigned Project Manager",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "managerName": {
+          "type": "string",
+          "description": "Display name of the assigned Project Manager",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "title", "description", "startDate", "endDate", "status", "managerId", "managerName", "createdAt", "updatedAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Work item assigned to a team member under a specific project.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique task ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectId": {
+          "type": "string",
+          "description": "Parent project ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "projectTitle": {
+          "type": "string",
+          "description": "Parent project title for denormalized display",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "title": {
+          "type": "string",
+          "description": "Task title",
+          "minLength": 3,
+          "maxLength": 140
+        },
+        "description": {
+          "type": "string",
+          "description": "Task acceptance criteria and instructions",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "assigneeId": {
+          "type": "string",
+          "description": "Assigned team member ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "assigneeName": {
+          "type": "string",
+          "description": "Assigned team member display name",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "priority": {
+          "type": "string",
+          "description": "Task priority level",
+          "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+          "minLength": 3,
+          "maxLength": 12
+        },
+        "status": {
+          "type": "string",
+          "description": "Execution status of the task",
+          "enum": ["TODO", "IN_PROGRESS", "IN_REVIEW", "DONE", "ARCHIVED"],
+          "minLength": 4,
+          "maxLength": 16
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "ISO due date YYYY-MM-DD",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "progress": {
+          "type": "number",
+          "description": "Completion percentage from 0 to 100"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "projectId", "projectTitle", "title", "description", "assigneeId", "assigneeName", "priority", "status", "dueDate", "progress", "createdAt", "updatedAt"]
+    },
+    "TaskComment": {
+      "title": "TaskComment",
+      "description": "Collaborative comment thread entry on a project task.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique comment ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "taskId": {
+          "type": "string",
+          "description": "Parent task ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "taskTitle": {
+          "type": "string",
+          "description": "Parent task title",
+          "minLength": 3,
+          "maxLength": 140
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Name of comment author",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "authorRole": {
+          "type": "string",
+          "description": "Role of comment author",
+          "enum": ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"],
+          "minLength": 5,
+          "maxLength": 20
+        },
+        "content": {
+          "type": "string",
+          "description": "Comment message body",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "taskId", "taskTitle", "authorName", "authorRole", "content", "createdAt", "updatedAt"]
+    },
+    "TaskAttachment": {
+      "title": "TaskAttachment",
+      "description": "File attachment metadata and content preview associated with a task.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique attachment ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "taskId": {
+          "type": "string",
+          "description": "Parent task ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "taskTitle": {
+          "type": "string",
+          "description": "Parent task title",
+          "minLength": 3,
+          "maxLength": 140
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Original file name",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "fileType": {
+          "type": "string",
+          "description": "MIME type or extension label",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "fileSizeBytes": {
+          "type": "number",
+          "description": "File size in bytes"
+        },
+        "uploadedBy": {
+          "type": "string",
+          "description": "Uploader display name",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "contentPreview": {
+          "type": "string",
+          "description": "Safe text snippet or compact encoded preview",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "taskId", "taskTitle", "fileName", "fileType", "fileSizeBytes", "uploadedBy", "contentPreview", "createdAt", "updatedAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit activity and notification entry for project, task, comment, attachment, user, and system events.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique activity log ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "actorName": {
+          "type": "string",
+          "description": "Name of the user who triggered the event",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "actorRole": {
+          "type": "string",
+          "description": "Role of the actor",
+          "enum": ["ADMIN", "PROJECT_MANAGER", "TEAM_MEMBER"],
+          "minLength": 5,
+          "maxLength": 20
+        },
+        "referenceType": {
+          "type": "string",
+          "description": "Entity type referenced",
+          "enum": ["PROJECT", "TASK", "USER", "SETTING", "COMMENT", "ATTACHMENT"],
+          "minLength": 4,
+          "maxLength": 12
+        },
+        "referenceId": {
+          "type": "string",
+          "description": "ID of the referenced entity",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable audit event description",
+          "minLength": 4,
+          "maxLength": 300
+        },
+        "readState": {
+          "type": "boolean",
+          "description": "Whether the notification has been marked as read"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "actorName", "actorRole", "referenceType", "referenceId", "message", "readState", "createdAt", "updatedAt"]
+    },
+    "SystemSetting": {
+      "title": "SystemSetting",
+      "description": "System-wide configuration parameter managed by Administrators.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique setting ID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Workspace owner UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "settingKey": {
+          "type": "string",
+          "description": "Configuration key identifier",
+          "minLength": 3,
+          "maxLength": 80
+        },
+        "settingValue": {
+          "type": "string",
+          "description": "Configuration value",
+          "minLength": 1,
+          "maxLength": 250
+        },
+        "category": {
+          "type": "string",
+          "description": "Setting category",
+          "enum": ["SECURITY", "JDBC_POOL", "WORKFLOW", "NOTIFICATIONS"],
+          "minLength": 4,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Explanation of the setting parameter",
+          "minLength": 5,
+          "maxLength": 250
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["id", "ownerId", "settingKey", "settingValue", "category", "description", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user account profiles indexed by Firebase Auth UID"
+    },
+    "/managedUsers/{memberId}": {
+      "schema": { "$ref": "#/entities/ManagedUser" },
+      "description": "Workspace user accounts managed by administrators and assigned to projects"
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Enterprise projects with timeline, status, and assigned manager"
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Project tasks assigned to team members with priority, status, due date, and progress"
+    },
+    "/taskComments/{commentId}": {
+      "schema": { "$ref": "#/entities/TaskComment" },
+      "description": "Real-time collaborative comments on project tasks"
+    },
+    "/taskAttachments/{attachmentId}": {
+      "schema": { "$ref": "#/entities/TaskAttachment" },
+      "description": "File attachments associated with project tasks"
+    },
+    "/activities/{activityId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Activity and notification feed items for tasks, projects, comments, attachments, and settings"
+    },
+    "/systemSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/SystemSetting" },
+      "description": "System-wide configuration parameters managed by administrators"
+    }
+  }
+}
